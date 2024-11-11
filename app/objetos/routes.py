@@ -1,11 +1,9 @@
 from flask import *
 from flask_jwt_extended import  *
 # rblueprnt para simplificar las rutas
-objetosBP = Blueprint("objetos",__name__)
+dispositivosBP = Blueprint("dispositivos",__name__)
 # ruta del archivo simplemente usando click y copy paht sobre el archivo destino y origen
-RUTA = r"files\objetos.json"
-# ruta del archivo simplemente usando click y copy paht sobre el archivo destino y origen
-RUTA2 = r"files\subobjetos.json"
+RUTA = r"files\devices.json"
 
 #   coje automaticamente la siguente id
 def find_next_id():
@@ -35,25 +33,17 @@ def escribirFichero(objetos):
 # def index():
 #     return("Servicio activo")
 
-#   http://localhost:5050/objetos
-@objetosBP.get('/')
+#   http://localhost:5050/dispositivos
+@dispositivosBP.get('/')
 @jwt_required()
 def get_objetos():
     objetos= leerFichero()
     return jsonify(objetos)
 
 
-#   http://localhost:5050/objetos/subobjetos
-@objetosBP.get('/subobjetos')
-def get_subobjetos():
-    with open(RUTA2, "r") as archivo:
-        objetos = json.load(archivo)
-    return jsonify(objetos)
 
-
-
-#   http://localhost:5050/objetos/2
-@objetosBP.get('/<int:id>')
+#   http://localhost:5050/dispositivos/2
+@dispositivosBP.get('/<int:id>')
 def get_objeto_id(id):
     objetos= leerFichero()
     for objeto in objetos:
@@ -62,8 +52,8 @@ def get_objeto_id(id):
         
     return { "Error " : "Objeto no encotrado :( " } ,404
 
-#   http://localhost:5050/objetos
-@objetosBP.post('/')
+#   http://localhost:5050/dispositivos
+@dispositivosBP.post('/')
 def add_objeto():
     objetos = leerFichero()
     if request.is_json:
@@ -76,9 +66,9 @@ def add_objeto():
     return { "Error " : "Objeto no es JSON :( " } ,415
 
 
-#   http://localhost:5050/objetos/2
-@objetosBP.put('/<int:id>')
-@objetosBP.patch('/<int:id>')
+#   http://localhost:5050/dispositivos/2
+@dispositivosBP.put('/<int:id>')
+@dispositivosBP.patch('/<int:id>')
 def mofify_objeto_id(id):
     objetos = leerFichero()
     if request.is_json:
@@ -92,8 +82,8 @@ def mofify_objeto_id(id):
             
     return { "Error " : "Objeto no encotrado :( " } ,404
 
-#   http://localhost:5050/objetos/2
-@objetosBP.delete('/<int:id>')
+#   http://localhost:5050/dispositivos/2
+@dispositivosBP.delete('/<int:id>')
 def delete_objeto_id(id):
     objetos= leerFichero()
     for objeto in objetos:
