@@ -28,12 +28,9 @@ def escribirFichero(objetos):
         json.dump(objetos, archivo, indent=4)
 
 
-#    http://localhost:5050
-# @app.route('/')
-# def index():
-#     return("Servicio activo")
 
-#   http://localhost:5050/dispositivos
+#  devuleve todos los dispositivos
+#  http://localhost:5050/dispositivos
 @dispositivosBP.get('/')
 @jwt_required()
 def get_objetos():
@@ -42,8 +39,11 @@ def get_objetos():
 
 
 
+
+#   coje un dispositivo
 #   http://localhost:5050/dispositivos/2
 @dispositivosBP.get('/<int:id>')
+@jwt_required()
 def get_objeto_id(id):
     objetos= leerFichero()
     for objeto in objetos:
@@ -52,38 +52,49 @@ def get_objeto_id(id):
         
     return { "Error " : "Objeto no encotrado :( " } ,404
 
-#   http://localhost:5050/dispositivos
+#  metodo post que crea un nuevo disopsitivo comprobando que los campos son validos
+#  http://localhost:5050/dispositivos
 @dispositivosBP.post('/')
+@jwt_required()
 def add_objeto():
     objetos = leerFichero()
     if request.is_json:
         objeto = request.get_json()
         objeto["id"] = find_next_id()
-        objetos.append(objeto)
-        escribirFichero(objetos)
-        return objeto , 201
+        if (objeto['tipo'] == "Luz" and objeto['estado'] == "Encendido"  or objeto['estado'] == "Apagado") or (objeto['tipo'] == "Termostato" and objeto['estado'] > 0):
+                objetos.append(objeto)
+                escribirFichero(objetos)
+                return objeto , 201
+        return { "Error " : "tipo no valido :( " }
 
     return { "Error " : "Objeto no es JSON :( " } ,415
 
 
-#   http://localhost:5050/dispositivos/2
+#   modifica un dispositivo comprobando que el json por parametro sea del mismo tipo e id 
+# http://localhost:5050/dispositivos/2
 @dispositivosBP.put('/<int:id>')
 @dispositivosBP.patch('/<int:id>')
+@jwt_required()
 def mofify_objeto_id(id):
     objetos = leerFichero()
     if request.is_json:
         newObjeto = request.get_json()
         for objeto in objetos:
             if objeto['id'] == id:
-                for atributo in newObjeto:
-                    objeto[atributo] = newObjeto[atributo]
-                escribirFichero(objetos)
-                return  objeto,200
-            
+                if (objeto['tipo'] == "Luz" and objeto['estado'] == "Encendido"  or objeto['estado'] == "Apagado") or (objeto['tipo'] == "Termostato" and objeto['estado'] > 0):
+                    if objeto['id']== newObjeto['id'] and objeto['tipo']== newObjeto['tipo']:
+                        for atributo in newObjeto:
+                            objeto[atributo] = newObjeto[atributo]
+                        escribirFichero(objetos)
+                        return  objeto,200
+                    return { "Error " : "El id o el tipo no coincide :( " } 
+                return { "Error " : "Objeto o tipo no valido :( " } 
     return { "Error " : "Objeto no encotrado :( " } ,404
 
-#   http://localhost:5050/dispositivos/2
+# Ekimina un dispositivo
+#  http://localhost:5050/dispositivos/2
 @dispositivosBP.delete('/<int:id>')
+@jwt_required()
 def delete_objeto_id(id):
     objetos= leerFichero()
     for objeto in objetos:

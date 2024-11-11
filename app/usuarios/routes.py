@@ -22,10 +22,10 @@ def escribirFichero(subobjetos):
         json.dump(subobjetos, archivo, indent=4)
 
 #  http://localhost:5050/usuarios/registrar  
-
+# metodo registar que registra un nuevo usuario JSON
   # {
-  #    "nombre": "Juan",
-  #    "contrasenya": "12345"
+  #    "nombre": "examen",
+  #    "contrasenya": "123"
   # }
     
 @usuariosBP.post("/registrar")
@@ -43,7 +43,11 @@ def registrarUsuario():
         return{"token": token },201
     return{"error": "Request must be JSON"} ,415
 
-
+  # {
+  #    "nombre": "examen",
+  #    "contrasenya": "123"
+  # }
+# metodo loginUsuario que  DEVULEVE UN TOKEN DE ACCESO
 #  http://localhost:5050/usuarios/login
 @usuariosBP.get("/login")
 def loginUsuario():

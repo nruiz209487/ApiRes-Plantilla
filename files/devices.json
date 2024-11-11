@@ -1,14 +1,26 @@
 [
     {
-        "estado": "apagado",
-        "tipo": "Luz",
+        "estado": "Apagado",
+        "id": 1,
         "nombre": "Luz Principal",
-        "id": 1
+        "tipo": "Luz"
     },
     {
         "estado": 22,
-        "tipo": "Termostato",
+        "id": 2,
         "nombre": "Termostato de sala",
-        "id": 2
+        "tipo": "Termostato"
+    },
+    {
+        "estado": 33,
+        "id": 3,
+        "nombre": "Termostato de anonimo",
+        "tipo": "Termostato"
+    },
+    {
+        "estado": 44,
+        "id": 4,
+        "nombre": "Termostato de paco 33",
+        "tipo": "Termostato"
     }
 ]
